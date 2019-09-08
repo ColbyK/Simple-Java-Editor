@@ -124,8 +124,10 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 			case "OpenFile":
 				System.out.println("OpenFile");
 				File selectFile = fileOpen();
-				FileTab fileOpened = new FileTab(selectFile);
-				createFileContentArea(fileOpened);
+				if(selectFile != null) {
+					FileTab fileOpened = new FileTab(selectFile);
+					createFileContentArea(fileOpened);
+				}
 				break;
 				
 			case "SaveFile":
