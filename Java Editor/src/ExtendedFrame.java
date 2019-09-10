@@ -2,6 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 
 import javax.swing.JFileChooser;
@@ -20,11 +21,12 @@ import javax.swing.event.CaretListener;
 class ExtendedJFrame extends JFrame implements ActionListener{
 	//public File selectedFile;
 	// TODO - maybe get file tabs for storage and save purposes
-	//public LinkedList<FileTab> tabs;
+	public LinkedList<FileTab> tabs;
 	// Editor tabs for JTextPane
 	public JTabbedPane tabPane;
 	public ExtendedJFrame() {
 		tabPane = new JTabbedPane();
+		tabs = new LinkedList<FileTab>();
 		createMenuBar();
 	}
 	// Creates the menu bar for application interactions using ActionListener
@@ -94,6 +96,7 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 	public void createFileContentArea(FileTab fileData) {
 		JTextPane panelTextPane = new JTextPane();
 		JScrollPane panelScrollPane = new JScrollPane(panelTextPane);
+		fileData.tabComponent = panelTextPane;
 		
 		panelTextPane.setText(fileData.content);
 		panelScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -125,7 +128,8 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 				System.out.println("OpenFile");
 				File selectFile = fileOpen();
 				if(selectFile != null) {
-					FileTab fileOpened = new FileTab(selectFile);
+					FileTab fileOpened = new FileTab(selectFile, false);
+					tabs.add(fileOpened);
 					createFileContentArea(fileOpened);
 				}
 				break;
@@ -147,12 +151,20 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 				
 			case "OpenProj":
 				System.out.println("OpenProj");
-				// TODO
+				File selectFolder = folderOpen();
+				if(selectFolder != null) {
+					LinkedList<File> javaFiles = getJavaFiles(selectFolder);
+					for(int i = 0; i < javaFiles.size(); i++) {
+						FileTab fileOpened = new FileTab(javaFiles.get(i), true);
+						tabs.add(fileOpened);
+						createFileContentArea(fileOpened);
+					}
+				}
 				break;
 				
 			case "SaveProj":
 				System.out.println("SaveProj");
-				// TODO
+				// TODO 
 				break;
 				
 			case "CloseProj":
@@ -181,5 +193,28 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 		else {
 			return null;
         }
+	}
+	// Gets the selected folder through JFileChooser
+	public File folderOpen() {
+		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File("."));
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            return chooser.getSelectedFile();
+        } 
+		else {
+			return null;
+        }
+	}
+	// Gets all java files in a specified directory
+	public LinkedList<File> getJavaFiles(File directory) {
+		LinkedList<File> javaFiles = new LinkedList<File>();
+		File[] allFiles = directory.listFiles();
+		for(int i = 0; i < allFiles.length; i++) {
+			if(allFiles[i].isFile() && allFiles[i].getName().toLowerCase().contains(".java")) {
+				javaFiles.add(allFiles[i]);
+			}
+		}
+		return javaFiles;
 	}
 }
