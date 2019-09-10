@@ -174,6 +174,7 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 	// Gets a selected file through JFileChooser
 	public File fileOpen() {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory(new File("."));
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             return chooser.getSelectedFile();
         } 
