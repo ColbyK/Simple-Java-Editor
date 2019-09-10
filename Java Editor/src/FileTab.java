@@ -4,12 +4,14 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
+import javax.swing.JTextPane;
+
 // File object for individual tabs created
 class FileTab {
 	public String fileName;
 	public String content;
 	public File file;
-	public Component tabComponent;
+	public JTextPane tabComponent;
 	public boolean isProjectFile;
 	// Input buffer, will only take specified number of characters to load as String content
 	private final int charBuffer = 65536;

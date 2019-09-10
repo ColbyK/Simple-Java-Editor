@@ -1,8 +1,14 @@
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.LinkedList;
 
 import javax.swing.JFileChooser;
@@ -20,10 +26,12 @@ import javax.swing.event.CaretListener;
 @SuppressWarnings("serial")
 class ExtendedJFrame extends JFrame implements ActionListener{
 	//public File selectedFile;
-	// TODO - maybe get file tabs for storage and save purposes
+	// maybe get file tabs for storage and save purposes
 	public LinkedList<FileTab> tabs;
 	// Editor tabs for JTextPane
 	public JTabbedPane tabPane;
+	// File path for the selected project folder
+	public File projPath;
 	public ExtendedJFrame() {
 		tabPane = new JTabbedPane();
 		tabs = new LinkedList<FileTab>();
@@ -151,7 +159,9 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 				
 			case "OpenProj":
 				System.out.println("OpenProj");
+				// TODO close current project if new is opened
 				File selectFolder = folderOpen();
+				projPath = selectFolder;
 				if(selectFolder != null) {
 					LinkedList<File> javaFiles = getJavaFiles(selectFolder);
 					for(int i = 0; i < javaFiles.size(); i++) {
@@ -165,6 +175,11 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 			case "SaveProj":
 				System.out.println("SaveProj");
 				// TODO 
+				for(int i = 0; i < tabs.size(); i++) {
+					if(tabs.get(i).isProjectFile) {
+						projFileSave(tabs.get(i).file, tabs.get(i).tabComponent.getText());
+					}
+				}
 				break;
 				
 			case "CloseProj":
@@ -216,5 +231,17 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 			}
 		}
 		return javaFiles;
+	}
+	// Saves a project with String
+	public void projFileSave(File file, String content) {
+		try {
+			PrintWriter writer = new PrintWriter(file, "UTF-8");
+			writer.write(content);
+			writer.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
 	}
 }
