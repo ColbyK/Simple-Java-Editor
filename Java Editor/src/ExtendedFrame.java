@@ -155,6 +155,7 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 			case "NewProj":
 				System.out.println("NewProj");
 				// TODO
+				//This is a test
 				break;
 				
 			case "OpenProj":
