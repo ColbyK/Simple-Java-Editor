@@ -4,15 +4,7 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.LinkedList;
 
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTextPane;
+import javax.swing.*;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileFilter;
@@ -104,7 +96,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         JTextPane panelTextPane = new JTextPane();
         JScrollPane panelScrollPane = new JScrollPane(panelTextPane);
         fileData.tabComponent = panelScrollPane;
-        
+
         panelTextPane.setText(fileData.content);
         panelScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         tabPane.add(fileData.fileName, panelScrollPane);
@@ -130,6 +122,11 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             case "NewFile":
                 System.out.println("NewFile");
                 File createFile = fileCreate();
+                if (createFile != null) {
+                    FileTab fileOpened = new FileTab(createFile, false);
+                    tabs.add(fileOpened);
+                    createFileContentArea(fileOpened);
+                }
                 break;
 
             case "OpenFile":
@@ -214,12 +211,12 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
             case "CloseProj":
                 System.out.println("CloseProj");
-                for(int i = 0; i < tabs.size(); i++) {
-                	if(tabs.get(i).isProjectFile) {
-                		tabPane.remove(tabs.get(i).tabComponent);
-                		tabs.remove(i);
-                		i--;
-                	}
+                for (int i = 0; i < tabs.size(); i++) {
+                    if (tabs.get(i).isProjectFile) {
+                        tabPane.remove(tabs.get(i).tabComponent);
+                        tabs.remove(i);
+                        i--;
+                    }
                 }
                 projPath = null;
                 break;
@@ -238,35 +235,31 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
     // create a new file through JFileChooser
     public File fileCreate() {
-        JFileChooser chooser = new JFileChooser();
-        chooser.setCurrentDirectory(new File("."));
-        chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
-        chooser.addChoosableFileFilter(new MyFileFilter("Java(.java)", ".java"));
-        chooser.addChoosableFileFilter(new MyFileFilter("C(.c)", ".c"));
-        chooser.addChoosableFileFilter(new MyFileFilter("C++(.cpp)", ".cpp"));
-        chooser.addChoosableFileFilter(new MyFileFilter("Text(.txt)", ".txt"));
-        chooser.addChoosableFileFilter(new MyFileFilter("HTML(.html)", ".html"));
-        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
-            File newFile;
-            File file = chooser.getSelectedFile();
-            if (file.getName() == null) return null;
-            BufferedWriter bw;
-            MyFileFilter filter = (MyFileFilter) chooser.getFileFilter();
-            String ends = filter.getEnds();
-            if (file.toString().indexOf(ends) != -1) {
-                newFile = file;
+        File folder = folderOpen();
+        if (folder != null) {
+            JTextField file_name = new JTextField();
+            Object[] fields = {"Enter a new file name", file_name};
+            Object[] obj2 = {".java", ".txt", ".html"};
+            String extension = (String) JOptionPane.showInputDialog(null, fields, "Enter a new file name", JOptionPane.PLAIN_MESSAGE, null, obj2, ".java");
+            // get new file name
+            String filefullname = file_name.getText() + extension;
+            System.out.println(filefullname);
+            // create new file
+            File newfile = new File(folder, filefullname);
+            if (filefullname == null || filefullname.equals(""))
+                return null;
+            if (!newfile.exists()) {
+                System.out.println("Creating file with name: " + newfile);
+                try {
+                    newfile.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             } else {
-                newFile = new File(file.getAbsolutePath() + ends);
+                JOptionPane.showMessageDialog(null, "There is already a file with the name of: " + newfile);
+                return null;
             }
-            try {
-                bw = new BufferedWriter(new FileWriter(newFile));
-                bw.flush();
-                bw.close();
-                return newFile;
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
-
+            return newfile;
         }
         return null;
     }
@@ -319,7 +312,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         }
     }
 
-    // For file filter to save different types of files
+    // For file filter to save different types of files( maybe not useful, you guys can delete it)
     class MyFileFilter extends FileFilter {
 
         String ends;
