@@ -190,18 +190,10 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 				System.out.println("Creating main file in the folder: " + folderName);
 				
 				//Opening folder now
-				File selectFolder1 = folderOpen();
-				File projPath1 = selectFolder1;
-				if(selectFolder1 != null) {
-					LinkedList<File> javaFiles = getJavaFiles(selectFolder1);
-					//System.out.println(javaFiles.size());
-					for(int i = 0; i < javaFiles.size(); i++) {
-						FileTab fileOpened = new FileTab(javaFiles.get(i), true);
-						tabs.add(fileOpened);
-						createFileContentArea(fileOpened);
-					}
-				}
-				
+				FileTab fileOpened1 = new FileTab(makeMainFile, true);
+				tabs.add(fileOpened1);
+				createFileContentArea(fileOpened1);
+							
 				break;
 				
 			case "OpenProj":
