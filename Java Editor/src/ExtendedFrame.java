@@ -150,6 +150,7 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 			case "CloseFile":
 				System.out.println("CloseFile");
 				// TODO
+				// Ivan is doing this
 				break;	
 				
 			case "NewProj":
