@@ -232,6 +232,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     public File fileCreate() {
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File("."));
+        chooser.removeChoosableFileFilter(chooser.getAcceptAllFileFilter());
         chooser.addChoosableFileFilter(new MyFileFilter("Java(.java)", ".java"));
         chooser.addChoosableFileFilter(new MyFileFilter("C(.c)", ".c"));
         chooser.addChoosableFileFilter(new MyFileFilter("C++(.cpp)", ".cpp"));
