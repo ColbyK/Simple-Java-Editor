@@ -26,7 +26,7 @@ import javax.swing.event.CaretListener;
 @SuppressWarnings("serial")
 class ExtendedJFrame extends JFrame implements ActionListener{
 	//public File selectedFile;
-	// maybe get file tabs for storage and save purposes
+	// get file tabs for storage and save purposes
 	public LinkedList<FileTab> tabs;
 	// Editor tabs for JTextPane
 	public JTabbedPane tabPane;

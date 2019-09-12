@@ -25,12 +25,12 @@ class FileTab {
 	private void getInput(File inputFile) {
 		if(inputFile != null) {
 			try {
-			FileInputStream fis = new FileInputStream(inputFile);
-	        InputStreamReader in = new InputStreamReader(fis, Charset.forName("UTF-8")); 
-	        char[] buffer = new char[charBuffer];
-	        int n = in.read(buffer);
-	        content = new String(buffer, 0, n);
-	        in.close();
+				FileInputStream fis = new FileInputStream(inputFile);
+		        InputStreamReader in = new InputStreamReader(fis, Charset.forName("UTF-8")); 
+		        char[] buffer = new char[charBuffer];
+		        int n = in.read(buffer);
+		        content = new String(buffer, 0, n);
+		        in.close();
 			}
 			catch(Exception exc){
 				exc.printStackTrace();
