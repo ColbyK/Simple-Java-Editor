@@ -155,29 +155,23 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 				break;	
 				
 			case "NewProj":
-				System.out.println("NewProject");
-				// TODO
-				//Check if project is open
-				
-				//if not open
-				
+				System.out.println("NewProject");			
 				//get new folder name
 				String folderName = JOptionPane.showInputDialog("Enter a new folder name");
-				
+	
 				//Create the folder
 				File folderNameCreate = new File(folderName);
 				
+				//Checks if the folder exists
 				if(!folderNameCreate.exists()) {
 					System.out.println("Creating project folder with name: " + folderName);
 					folderNameCreate.mkdir();
 				}
 				else {
-					//System.out.println("Creating project folder failed");
 					JOptionPane.showMessageDialog(null, "There is already a folder with the name of: " + folderName);
 				}
-				//Open the folder
-				
-				//Create a Main File with Main Function
+
+				//Create a Main File
 				String mainFile = "Main";
 				String javaMainFile = mainFile + ".java";
 				File makeMainFile = new File(folderNameCreate, javaMainFile);
@@ -192,8 +186,7 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 				//Opening folder now
 				FileTab fileOpened1 = new FileTab(makeMainFile, true);
 				tabs.add(fileOpened1);
-				createFileContentArea(fileOpened1);
-							
+				createFileContentArea(fileOpened1);		
 				break;
 				
 			case "OpenProj":
