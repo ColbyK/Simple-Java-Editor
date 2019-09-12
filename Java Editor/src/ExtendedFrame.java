@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
@@ -154,9 +155,53 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 				break;	
 				
 			case "NewProj":
-				System.out.println("NewProj");
+				System.out.println("NewProject");
 				// TODO
-				//This is a test
+				//Check if project is open
+				
+				//if not open
+				
+				//get new folder name
+				String folderName = JOptionPane.showInputDialog("Enter a new folder name");
+				
+				//Create the folder
+				File folderNameCreate = new File(folderName);
+				
+				if(!folderNameCreate.exists()) {
+					System.out.println("Creating project folder with name: " + folderName);
+					folderNameCreate.mkdir();
+				}
+				else {
+					//System.out.println("Creating project folder failed");
+					JOptionPane.showMessageDialog(null, "There is already a folder with the name of: " + folderName);
+				}
+				//Open the folder
+				
+				//Create a Main File with Main Function
+				String mainFile = "Main";
+				String javaMainFile = mainFile + ".java";
+				File makeMainFile = new File(folderNameCreate, javaMainFile);
+				try {
+					makeMainFile.createNewFile();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("Creating main file in the folder: " + folderName);
+				
+				//Opening folder now
+				File selectFolder1 = folderOpen();
+				File projPath1 = selectFolder1;
+				if(selectFolder1 != null) {
+					LinkedList<File> javaFiles = getJavaFiles(selectFolder1);
+					//System.out.println(javaFiles.size());
+					for(int i = 0; i < javaFiles.size(); i++) {
+						FileTab fileOpened = new FileTab(javaFiles.get(i), true);
+						tabs.add(fileOpened);
+						createFileContentArea(fileOpened);
+					}
+				}
+				
 				break;
 				
 			case "OpenProj":
@@ -218,7 +263,7 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             return chooser.getSelectedFile();
-        } 
+        }
 		else {
 			return null;
         }
@@ -245,5 +290,5 @@ class ExtendedJFrame extends JFrame implements ActionListener{
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
-	}
+	}	
 }

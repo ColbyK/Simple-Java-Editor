@@ -29,7 +29,7 @@ class FileTab {
 		        InputStreamReader in = new InputStreamReader(fis, Charset.forName("UTF-8")); 
 		        char[] buffer = new char[charBuffer];
 		        int n = in.read(buffer);
-		        content = new String(buffer, 0, n);
+		        content = new String(buffer, 0, n+1);
 		        in.close();
 			}
 			catch(Exception exc){
