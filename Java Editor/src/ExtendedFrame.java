@@ -128,7 +128,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         switch (actionType) {
             case "NewFile":
                 System.out.println("NewFile");
-				File createFile = fileCreate();
+                File createFile = fileCreate();
                 break;
 
             case "OpenFile":
@@ -237,7 +237,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         chooser.addChoosableFileFilter(new MyFileFilter("C++(.cpp)", ".cpp"));
         chooser.addChoosableFileFilter(new MyFileFilter("Text(.txt)", ".txt"));
         chooser.addChoosableFileFilter(new MyFileFilter("HTML(.html)", ".html"));
-        if (chooser.showSaveDialog(this)==JFileChooser.APPROVE_OPTION) {
+        if (chooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
             File newFile;
             File file = chooser.getSelectedFile();
             if (file.getName() == null) return null;
