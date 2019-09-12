@@ -4,14 +4,16 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 
+import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
+import javax.swing.JViewport;
 
 // File object for individual tabs created
 class FileTab {
 	public String fileName;
 	public String content;
 	public File file;
-	public JTextPane tabComponent;
+	public JScrollPane tabComponent;
 	public boolean isProjectFile;
 	// Input buffer, will only take specified number of characters to load as String content
 	private final int charBuffer = 65536;
@@ -36,5 +38,10 @@ class FileTab {
 				exc.printStackTrace();
 			}
 		}
+	}
+	
+	public JTextPane getTextPane() {
+		JViewport viewport = tabComponent.getViewport(); 
+		return (JTextPane)viewport.getView(); 
 	}
 }

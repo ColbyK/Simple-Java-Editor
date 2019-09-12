@@ -16,6 +16,7 @@ import javax.swing.JTextPane;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileFilter;
+import javax.swing.plaf.basic.BasicTabbedPaneUI.TabbedPaneLayout;
 
 // The entire frame for the application including the menu bar and editor tabs (may break up later)
 @SuppressWarnings("serial")
@@ -102,8 +103,8 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     public void createFileContentArea(FileTab fileData) {
         JTextPane panelTextPane = new JTextPane();
         JScrollPane panelScrollPane = new JScrollPane(panelTextPane);
-        fileData.tabComponent = panelTextPane;
-
+        fileData.tabComponent = panelScrollPane;
+        
         panelTextPane.setText(fileData.content);
         panelScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
         tabPane.add(fileData.fileName, panelScrollPane);
@@ -206,14 +207,21 @@ class ExtendedJFrame extends JFrame implements ActionListener {
                 // TODO
                 for (int i = 0; i < tabs.size(); i++) {
                     if (tabs.get(i).isProjectFile) {
-                        projFileSave(tabs.get(i).file, tabs.get(i).tabComponent.getText());
+                        projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
                     }
                 }
                 break;
 
             case "CloseProj":
                 System.out.println("CloseProj");
-                // TODO
+                for(int i = 0; i < tabs.size(); i++) {
+                	if(tabs.get(i).isProjectFile) {
+                		tabPane.remove(tabs.get(i).tabComponent);
+                		tabs.remove(i);
+                		i--;
+                	}
+                }
+                projPath = null;
                 break;
 
             case "Compile":
