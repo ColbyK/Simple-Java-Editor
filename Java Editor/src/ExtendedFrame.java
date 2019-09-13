@@ -162,72 +162,23 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             case "NewProj":
                 System.out.println("NewProject");
                 //get new folder name
-                String folderName = JOptionPane.showInputDialog("Enter a new folder name");
-
-                //Create the folder
-                File folderNameCreate = new File(folderName);
-
-                //Checks if the folder exists
-                if (!folderNameCreate.exists()) {
-                    System.out.println("Creating project folder with name: " + folderName);
-                    folderNameCreate.mkdir();
-                } else {
-                    JOptionPane.showMessageDialog(null, "There is already a folder with the name of: " + folderName);
-                }
-
-                //Create a Main File
-                String mainFile = "Main";
-                String javaMainFile = mainFile + ".java";
-                File makeMainFile = new File(folderNameCreate, javaMainFile);
-                try {
-                    makeMainFile.createNewFile();
-                } catch (IOException e) {
-                    // TODO Auto-generated catch block
-                    e.printStackTrace();
-                }
-                System.out.println("Creating main file in the folder: " + folderName);
-
-                //Opening folder now
-                FileTab fileOpened1 = new FileTab(makeMainFile, true);
-                tabs.add(fileOpened1);
-                createFileContentArea(fileOpened1);
+                newProject();
                 break;
 
             case "OpenProj":
                 System.out.println("OpenProj");
-                // TODO close current project if new is opened
-                File selectFolder = folderOpen();
-                projPath = selectFolder;
-                if (selectFolder != null) {
-                    LinkedList<File> javaFiles = getJavaFiles(selectFolder);
-                    for (int i = 0; i < javaFiles.size(); i++) {
-                        FileTab fileOpened = new FileTab(javaFiles.get(i), true);
-                        tabs.add(fileOpened);
-                        createFileContentArea(fileOpened);
-                    }
-                }
+                closeProject();
+                openProject();
                 break;
 
             case "SaveProj":
                 System.out.println("SaveProj");
-                // TODO
-                for (int i = 0; i < tabs.size(); i++) {
-                    if (tabs.get(i).isProjectFile) {
-                        projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
-                    }
-                }
+                saveProject();
                 break;
 
             case "CloseProj":
                 System.out.println("CloseProj");
-                for (int i = 0; i < tabs.size(); i++) {
-                    if (tabs.get(i).isProjectFile) {
-                        tabPane.remove(tabs.get(i).tabComponent);
-                        tabs.remove(i);
-                        i--;
-                    }
-                }
-                projPath = null;
+                closeProject();
                 break;
 
             case "Compile":
@@ -242,6 +193,71 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         }
     }
 
+    public void newProject() {
+    	//get new folder name
+        String folderName = JOptionPane.showInputDialog("Enter a new folder name");
+        
+        //Create the folder
+        File folderNameCreate = new File(folderName);
+
+        //Checks if the folder exists
+        if (!folderNameCreate.exists()) {
+            System.out.println("Creating project folder with name: " + folderName);
+            folderNameCreate.mkdir();
+        } else {
+            JOptionPane.showMessageDialog(null, "There is already a folder with the name of: " + folderName);
+        }
+
+        //Create a Main File
+        String mainFile = "Main";
+        String javaMainFile = mainFile + ".java";
+        File makeMainFile = new File(folderNameCreate, javaMainFile);
+        try {
+            makeMainFile.createNewFile();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println("Creating main file in the folder: " + folderName);
+
+        //Opening folder now
+        FileTab fileOpened1 = new FileTab(makeMainFile, true);
+        tabs.add(fileOpened1);
+        createFileContentArea(fileOpened1);
+    }
+    
+    public void openProject() {
+    	File selectFolder = folderOpen();
+        projPath = selectFolder;
+        if (selectFolder != null) {
+            LinkedList<File> javaFiles = getJavaFiles(selectFolder);
+            for (int i = 0; i < javaFiles.size(); i++) {
+                FileTab fileOpened = new FileTab(javaFiles.get(i), true);
+                tabs.add(fileOpened);
+                createFileContentArea(fileOpened);
+            }
+        }
+    }
+    
+    public void closeProject() {
+    	for (int i = 0; i < tabs.size(); i++) {
+            if (tabs.get(i).isProjectFile) {
+                tabPane.remove(tabs.get(i).tabComponent);
+                tabs.remove(i);
+                i--;
+            }
+        }
+        projPath = null;
+    }
+    
+    public void saveProject() {
+    	for (int i = 0; i < tabs.size(); i++) {
+            if (tabs.get(i).isProjectFile) {
+                projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
+            }
+        }
+    }
+    
     // create a new file through JFileChooser
     public File fileCreate() {
         File folder = folderOpen();
