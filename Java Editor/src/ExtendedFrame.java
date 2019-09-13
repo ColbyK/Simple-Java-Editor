@@ -122,7 +122,19 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             case "NewFile":
                 System.out.println("NewFile");
                 File createFile = fileCreate();
-                if (createFile != null) {
+                System.out.println(projPath);
+                if (createFile != null&&projPath!=null) {
+                    LinkedList<File> javaFiles = getJavaFiles(projPath);
+                    for (int i = 0; i < javaFiles.size(); i++) {
+                        if(javaFiles.get(i).getName().equals(createFile.getName())){
+                            System.out.println("File is in the project folder");
+                            FileTab fileOpened = new FileTab(javaFiles.get(i), true);
+                            tabs.add(fileOpened);
+                            createFileContentArea(fileOpened);
+                        }
+                    }
+                }
+                else if(createFile != null){
                     FileTab fileOpened = new FileTab(createFile, false);
                     tabs.add(fileOpened);
                     createFileContentArea(fileOpened);
