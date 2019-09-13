@@ -99,7 +99,10 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
         panelTextPane.setText(fileData.content);
         panelScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        tabPane.add(fileData.fileName, panelScrollPane);
+        if(fileData.isProjectFile)
+        	tabPane.add(fileData.fileName + " - Project", panelScrollPane);
+        else
+        	tabPane.add(fileData.fileName, panelScrollPane);
 
         this.getContentPane().add(tabPane, BorderLayout.CENTER);
         this.setSize(1000, 800);
@@ -122,20 +125,14 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             case "NewFile":
                 System.out.println("NewFile");
                 File createFile = fileCreate();
-                System.out.println(projPath);
-                if (createFile != null&&projPath!=null) {
-                    LinkedList<File> javaFiles = getJavaFiles(projPath);
-                    for (int i = 0; i < javaFiles.size(); i++) {
-                        if(javaFiles.get(i).getName().equals(createFile.getName())){
-                            System.out.println("File is in the project folder");
-                            FileTab fileOpened = new FileTab(javaFiles.get(i), true);
-                            tabs.add(fileOpened);
-                            createFileContentArea(fileOpened);
-                        }
+                if (createFile != null) {
+                	FileTab fileOpened;
+                    if(projPath != null && projPath.getAbsolutePath().equals(createFile.getParent())) {
+                    	fileOpened = new FileTab(createFile, true);
                     }
-                }
-                else if(createFile != null){
-                    FileTab fileOpened = new FileTab(createFile, false);
+                    else {
+                        fileOpened = new FileTab(createFile, false);
+                    }
                     tabs.add(fileOpened);
                     createFileContentArea(fileOpened);
                 }
