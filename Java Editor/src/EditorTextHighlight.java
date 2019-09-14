@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JLabel;
 import javax.swing.JTextPane;
 import javax.swing.SwingWorker;
 import javax.swing.text.AttributeSet;
@@ -14,11 +15,13 @@ class EditorTextHighlight extends SwingWorker<Void,Object> {
     private JTextPane textPane;
     private StyleContext style;
     private AttributeSet textStyle;
+    private JLabel keywordsLabel;
     // TODO - might grab number of keywords here, would be simple but potential threading problems
-    private Integer numKeywords;
+    //private Integer numKeywords;
     
-    public EditorTextHighlight(JTextPane text) {
+    public EditorTextHighlight(JTextPane text, JLabel label) {
     	textPane = text;
+    	keywordsLabel = label;
     }
     // Matches specific regular expressions to apply style to text
     private void matching(String str){
@@ -33,12 +36,12 @@ class EditorTextHighlight extends SwingWorker<Void,Object> {
         String input = str;
         Pattern p = Pattern.compile(regexLogic);
         Matcher m = p.matcher(input);
-        numKeywords = 0;
+        int numKeywords = 0;
         while(m.find()) {
         	textPane.getStyledDocument().setCharacterAttributes(m.start(),(m.end() - m.start()),textStyle, false);
             numKeywords++;
         }
-
+        keywordsLabel.setText("Number of Keywords: " + numKeywords);
         // Color all arithmetic and logic RED
         textStyle = style.addAttribute(style.getEmptySet(),StyleConstants.Foreground, Color.RED);
         String regexArith = "\\b(true|True|TRUE|false|False|FALSE)\\b|[\\/+%*-]|\\|\\||&&";

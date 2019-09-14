@@ -5,6 +5,7 @@ import java.io.*;
 import java.util.LinkedList;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileFilter;
@@ -20,13 +21,22 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     public JTabbedPane tabPane;
     // File path for the selected project folder
     public File projPath;
-
+    // Label for tracking number of keywords in current selected tab
+    public JLabel keywordsTrack;
+    
     public ExtendedJFrame() {
         tabPane = new JTabbedPane();
         tabs = new LinkedList<FileTab>();
+        createKeywordsLabel();
         createMenuBar();
     }
 
+    public void createKeywordsLabel() {
+    	keywordsTrack = new JLabel();
+        keywordsTrack.setText("Number of Keywords: ");
+        this.getContentPane().add(keywordsTrack, BorderLayout.SOUTH);
+    }
+    
     // Creates the menu bar for application interactions using ActionListener
     public void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -103,7 +113,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         	tabPane.add(fileData.fileName + " - Project", panelScrollPane);
         else
         	tabPane.add(fileData.fileName, panelScrollPane);
-
+        
         this.getContentPane().add(tabPane, BorderLayout.CENTER);
         this.setSize(1000, 800);
         this.setVisible(true);
@@ -111,7 +121,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         // Listener for code highlighting
         panelTextPane.addCaretListener(new CaretListener() {
             public void caretUpdate(CaretEvent arg0) {
-                EditorTextHighlight eth = new EditorTextHighlight(panelTextPane);
+                EditorTextHighlight eth = new EditorTextHighlight(panelTextPane, keywordsTrack);
                 eth.execute();
             }
         });
