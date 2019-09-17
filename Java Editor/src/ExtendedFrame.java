@@ -57,7 +57,10 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         JMenuItem closeFileMenuItem = new JMenuItem("Close");
         closeFileMenuItem.setActionCommand("CloseFile");
         closeFileMenuItem.addActionListener(this);
-
+        JMenuItem removeFileMenuItem = new JMenuItem("Remove");
+        removeFileMenuItem.setActionCommand("RemoveFile");
+        removeFileMenuItem.addActionListener(this);
+        
         JMenuItem newProjMenuItem = new JMenuItem("New");
         newProjMenuItem.setActionCommand("NewProj");
         newProjMenuItem.addActionListener(this);
@@ -84,6 +87,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         menuFile.add(openFileMenuItem);
         menuFile.add(saveFileMenuItem);
         menuFile.add(closeFileMenuItem);
+        menuFile.add(removeFileMenuItem);
 
         menuProj.add(newProjMenuItem);
         menuProj.add(openProjMenuItem);
@@ -167,6 +171,11 @@ class ExtendedJFrame extends JFrame implements ActionListener {
                 System.out.println("CloseFile");
                 // TODO
                 // Ivan is doing this
+                break;
+              
+            case "RemoveFile":
+            	System.out.println("RemoveFile");
+                // TODO
                 break;
 
             case "NewProj":
