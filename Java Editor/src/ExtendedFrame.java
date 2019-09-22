@@ -318,14 +318,28 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         }
     }
     
+    //Closes selected tabComponent including files and projects, displays project path of file if its in project
     public void fileClose() {
-    	int selectedIndex = tabPane.getSelectedIndex();
-    	if (selectedIndex > -1) {
-        	if (!tabs.get(selectedIndex).isProjectFile) {
-                tabPane.remove(tabs.get(selectedIndex).tabComponent);
-                tabs.remove(selectedIndex);
-            }
+    	JScrollPane selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
+    	for (int i=0; i<tabs.size(); i++) {
+    		if (tabs.get(i).tabComponent == selectedComponent) {
+    			 tabs.remove(i);
+    			 tabPane.remove(selectedComponent);
+    			 break;
+    		}
     	}
+    	
+    	boolean isProjectFile = false;
+    	for (int j=0; j<tabs.size(); j++) {
+    		if (tabs.get(j).isProjectFile) {
+    			isProjectFile = true;
+    			break;
+    		}
+    	}
+    	if (!isProjectFile) {
+    		projPath = null;
+    	}
+    	System.out.println(projPath);
     }
     
     // Gets the selected folder through JFileChooser
