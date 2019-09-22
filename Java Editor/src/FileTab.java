@@ -28,7 +28,7 @@ class FileTab {
 		if(inputFile != null) {
 			try {
 				FileInputStream fis = new FileInputStream(inputFile);
-		        InputStreamReader in = new InputStreamReader(fis, Charset.forName("UTF-8")); 
+		        InputStreamReader in = new InputStreamReader(fis, Charset.forName("UTF-8"));
 		        char[] buffer = new char[charBuffer];
 		        int n = in.read(buffer);
 		        content = new String(buffer, 0, n+1);
@@ -39,9 +39,14 @@ class FileTab {
 			}
 		}
 	}
-	
+
 	public JTextPane getTextPane() {
-		JViewport viewport = tabComponent.getViewport(); 
-		return (JTextPane)viewport.getView(); 
+		JViewport viewport = tabComponent.getViewport();
+		return (JTextPane)viewport.getView();
+	}
+
+	public boolean unsavedChanges()
+	{
+		return content.compareTo(getTextPane().getText()) != 0;
 	}
 }

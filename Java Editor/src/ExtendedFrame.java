@@ -11,6 +11,7 @@ import javax.swing.event.CaretListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicTabbedPaneUI.TabbedPaneLayout;
 
+
 // The entire frame for the application including the menu bar and editor tabs (may break up later)
 @SuppressWarnings("serial")
 class ExtendedJFrame extends JFrame implements ActionListener {
@@ -23,7 +24,9 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     public File projPath;
     // Label for tracking number of keywords in current selected tab
     public JLabel keywordsTrack;
-    
+
+    // public FileTab currentTab;
+
     public ExtendedJFrame() {
         tabPane = new JTabbedPane();
         tabs = new LinkedList<FileTab>();
@@ -36,7 +39,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         keywordsTrack.setText("Number of Keywords: ");
         this.getContentPane().add(keywordsTrack, BorderLayout.SOUTH);
     }
-    
+
     // Creates the menu bar for application interactions using ActionListener
     public void createMenuBar() {
         JMenuBar menuBar = new JMenuBar();
@@ -60,7 +63,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         JMenuItem removeFileMenuItem = new JMenuItem("Remove");
         removeFileMenuItem.setActionCommand("RemoveFile");
         removeFileMenuItem.addActionListener(this);
-        
+
         JMenuItem newProjMenuItem = new JMenuItem("New");
         newProjMenuItem.setActionCommand("NewProj");
         newProjMenuItem.addActionListener(this);
@@ -117,7 +120,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         	tabPane.add(fileData.fileName + " - Project", panelScrollPane);
         else
         	tabPane.add(fileData.fileName, panelScrollPane);
-        
+
         this.getContentPane().add(tabPane, BorderLayout.CENTER);
         this.setSize(1000, 800);
         this.setVisible(true);
@@ -164,14 +167,14 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
             case "SaveFile":
                 System.out.println("SaveFile");
-                // TODO
+                saveFile();
                 break;
 
             case "CloseFile":
                 System.out.println("CloseFile");
                 fileClose();
                 break;
-              
+
             case "RemoveFile":
             	System.out.println("RemoveFile");
                 // TODO
@@ -214,7 +217,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     public void newProject() {
     	//get new folder name
         String folderName = JOptionPane.showInputDialog("Enter a new folder name");
-        
+
         //Create the folder
         File folderNameCreate = new File(folderName);
 
@@ -243,7 +246,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         tabs.add(fileOpened1);
         createFileContentArea(fileOpened1);
     }
-    
+
     public void openProject() {
     	File selectFolder = folderOpen();
         projPath = selectFolder;
@@ -256,10 +259,21 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             }
         }
     }
-    
+
     public void closeProject() {
     	for (int i = 0; i < tabs.size(); i++) {
             if (tabs.get(i).isProjectFile) {
+                if(tabs.get(i).unsavedChanges())
+                {
+                    System.out.println("Unsaved Changes on file");
+                    Object[] options = { "Save", "Cancel", "Don't Save"};
+                    String x = tabs.get(i).fileName + " has unsaved changes, do you want to save them?";
+                    int result = JOptionPane.showOptionDialog(null,x, "Unsaved Changes",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, options, options[0]);
+                    if(result == 0) saveFile();
+                    else if(result == 1) return;
+                }
                 tabPane.remove(tabs.get(i).tabComponent);
                 tabs.remove(i);
                 i--;
@@ -267,7 +281,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         }
         projPath = null;
     }
-    
+
     public void saveProject() {
     	for (int i = 0; i < tabs.size(); i++) {
             if (tabs.get(i).isProjectFile) {
@@ -275,7 +289,31 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             }
         }
     }
-    
+
+    public void saveFile()
+    {
+        if(tabPane.getTabCount() == 0)
+        {
+            System.out.println("Saving failed, No files open");
+            return;
+        }
+        // System.out.println(tabPane.getTitleAt(tabPane.getSelectedIndex()));
+
+        JViewport viewport = ((JScrollPane)tabPane.getSelectedComponent()).getViewport();
+        JTextPane currentTextPane = (JTextPane)viewport.getView();
+
+        for(int i = 0; i<tabs.size(); i++)
+        {
+            if(currentTextPane == tabs.get(i).getTextPane())
+            {
+                // System.out.println(i);
+                projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
+                tabs.get(i).content=tabs.get(i).getTextPane().getText();
+
+            }
+        }
+    }
+
     // create a new file through JFileChooser
     public File fileCreate() {
         File folder = folderOpen();
@@ -317,18 +355,29 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             return null;
         }
     }
-    
+
     //Closes selected tabComponent including files and projects, displays project path of file if its in project
     public void fileClose() {
     	JScrollPane selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
     	for (int i=0; i<tabs.size(); i++) {
     		if (tabs.get(i).tabComponent == selectedComponent) {
+                if(tabs.get(i).unsavedChanges())
+                {
+                    System.out.println("Unsaved Changes on file");
+                    Object[] options = { "Save", "Cancel", "Don't Save"};
+                    String x = tabs.get(i).fileName + " has unsaved changes, do you want to save them?";
+                    int result = JOptionPane.showOptionDialog(null,x, "Unsaved Changes",
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
+                    null, options, options[0]);
+                    if(result == 0) saveFile();
+                    else if(result == 1) return;
+                }
     			 tabs.remove(i);
     			 tabPane.remove(selectedComponent);
     			 break;
     		}
     	}
-    	
+
     	boolean isProjectFile = false;
     	for (int j=0; j<tabs.size(); j++) {
     		if (tabs.get(j).isProjectFile) {
@@ -341,7 +390,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     	}
     	System.out.println(projPath);
     }
-    
+
     // Gets the selected folder through JFileChooser
     public File folderOpen() {
         JFileChooser chooser = new JFileChooser();
