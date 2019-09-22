@@ -319,15 +319,15 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     }
     
     public void fileClose() {
-    	for (int i = 0; i < tabs.size(); i++) {
-            if (!tabs.get(i).isProjectFile) {
-                tabPane.remove(tabs.get(i).tabComponent);
-                tabs.remove(i);
-                i--;
+    	int selectedIndex = tabPane.getSelectedIndex();
+    	if (selectedIndex > -1) {
+        	if (!tabs.get(selectedIndex).isProjectFile) {
+                tabPane.remove(tabs.get(selectedIndex).tabComponent);
+                tabs.remove(selectedIndex);
             }
-        }
+    	}
     }
-
+    
     // Gets the selected folder through JFileChooser
     public File folderOpen() {
         JFileChooser chooser = new JFileChooser();
