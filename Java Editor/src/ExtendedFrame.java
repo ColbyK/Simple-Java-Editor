@@ -169,8 +169,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
             case "CloseFile":
                 System.out.println("CloseFile");
-                // TODO
-                // Ivan is doing this
+                fileClose();
                 break;
               
             case "RemoveFile":
@@ -316,6 +315,16 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             return chooser.getSelectedFile();
         } else {
             return null;
+        }
+    }
+    
+    public void fileClose() {
+    	for (int i = 0; i < tabs.size(); i++) {
+            if (!tabs.get(i).isProjectFile) {
+                tabPane.remove(tabs.get(i).tabComponent);
+                tabs.remove(i);
+                i--;
+            }
         }
     }
 
