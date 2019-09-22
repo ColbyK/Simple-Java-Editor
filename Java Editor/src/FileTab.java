@@ -1,7 +1,10 @@
 import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
 
 import javax.swing.JScrollPane;
@@ -40,11 +43,25 @@ class FileTab {
 		}
 	}
 
+	// get the inner component of the scrollpane
 	public JTextPane getTextPane() {
 		JViewport viewport = tabComponent.getViewport();
 		return (JTextPane)viewport.getView();
 	}
-
+	
+	// saves the file with the current text content in the scrollpane
+	public void saveFile() {
+		try {
+            PrintWriter writer = new PrintWriter(file, "UTF-8");
+            writer.write(getTextPane().getText());
+            writer.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+	}
+	// gets unsaved changes to this tab, returns true if there are unsaved changes
 	public boolean unsavedChanges()
 	{
 		return content.compareTo(getTextPane().getText()) != 0;

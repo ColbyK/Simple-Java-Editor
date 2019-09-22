@@ -268,11 +268,13 @@ class ExtendedJFrame extends JFrame implements ActionListener {
                     System.out.println("Unsaved Changes on file");
                     Object[] options = { "Save", "Cancel", "Don't Save"};
                     String x = tabs.get(i).fileName + " has unsaved changes, do you want to save them?";
-                    int result = JOptionPane.showOptionDialog(null,x, "Unsaved Changes",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-                    null, options, options[0]);
-                    if(result == 0) saveFile();
-                    else if(result == 1) return;
+                    int result = JOptionPane.showOptionDialog(null,x, "Unsaved Changes", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                    if(result == 0) {
+                    	saveFile();
+                    }
+                    else if(result == 1) {
+                    	return;
+                    }	
                 }
                 tabPane.remove(tabs.get(i).tabComponent);
                 tabs.remove(i);
@@ -285,7 +287,8 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     public void saveProject() {
     	for (int i = 0; i < tabs.size(); i++) {
             if (tabs.get(i).isProjectFile) {
-                projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
+            	tabs.get(i).saveFile();
+                //projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
             }
         }
     }
@@ -305,7 +308,8 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             if(selectedComponent == tabs.get(i).tabComponent)
             {
                 // System.out.println(i);
-                projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
+            	tabs.get(i).saveFile();
+                //projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
                 tabs.get(i).content=tabs.get(i).getTextPane().getText();
             }
         }
@@ -363,15 +367,17 @@ class ExtendedJFrame extends JFrame implements ActionListener {
                     System.out.println("Unsaved Changes on file");
                     Object[] options = { "Save", "Cancel", "Don't Save"};
                     String x = tabs.get(i).fileName + " has unsaved changes, do you want to save them?";
-                    int result = JOptionPane.showOptionDialog(null,x, "Unsaved Changes",
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE,
-                    null, options, options[0]);
-                    if(result == 0) saveFile();
-                    else if(result == 1) return;
+                    int result = JOptionPane.showOptionDialog(null,x, "Unsaved Changes", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                    if(result == 0) {
+                    	saveFile();
+                    }
+                    else if(result == 1) {
+                    	return;
+                    }
                 }
-    			 tabs.remove(i);
-    			 tabPane.remove(selectedComponent);
-    			 break;
+    			tabs.remove(i);
+    			tabPane.remove(selectedComponent);
+    			break;
     		}
     	}
 
@@ -413,7 +419,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     }
 
     // Saves a project with String
-    public void projFileSave(File file, String content) {
+    /*public void projFileSave(File file, String content) {
         try {
             PrintWriter writer = new PrintWriter(file, "UTF-8");
             writer.write(content);
@@ -423,7 +429,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }
+    }*/
 
     // For file filter to save different types of files( maybe not useful, you guys can delete it)
     class MyFileFilter extends FileFilter {
