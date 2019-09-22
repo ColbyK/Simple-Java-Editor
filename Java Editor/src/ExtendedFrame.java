@@ -298,18 +298,15 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             return;
         }
         // System.out.println(tabPane.getTitleAt(tabPane.getSelectedIndex()));
-
-        JViewport viewport = ((JScrollPane)tabPane.getSelectedComponent()).getViewport();
-        JTextPane currentTextPane = (JTextPane)viewport.getView();
+	JScrollPane selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
 
         for(int i = 0; i<tabs.size(); i++)
         {
-            if(currentTextPane == tabs.get(i).getTextPane())
+            if(selectedComponent == tabs.get(i).tabComponent)
             {
                 // System.out.println(i);
                 projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
                 tabs.get(i).content=tabs.get(i).getTextPane().getText();
-
             }
         }
     }
