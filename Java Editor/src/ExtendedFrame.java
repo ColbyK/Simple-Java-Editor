@@ -239,6 +239,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
                 createFileContentArea(fileOpened);
             }
         }
+        validateActiveProject();
     }
 
     public void closeProject() {
