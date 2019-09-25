@@ -25,8 +25,6 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     // Label for tracking number of keywords in current selected tab
     public JLabel keywordsTrack;
 
-    // public FileTab currentTab;
-
     public ExtendedJFrame() {
         tabPane = new JTabbedPane();
         tabs = new LinkedList<FileTab>();
@@ -141,28 +139,12 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         switch (actionType) {
             case "NewFile":
                 System.out.println("NewFile");
-                File createFile = fileCreate();
-                if (createFile != null) {
-                	FileTab fileOpened;
-                    if(projPath != null && projPath.getAbsolutePath().equals(createFile.getParent())) {
-                    	fileOpened = new FileTab(createFile, true);
-                    }
-                    else {
-                        fileOpened = new FileTab(createFile, false);
-                    }
-                    tabs.add(fileOpened);
-                    createFileContentArea(fileOpened);
-                }
+                newFile();
                 break;
 
             case "OpenFile":
                 System.out.println("OpenFile");
-                File selectFile = fileOpen();
-                if (selectFile != null) {
-                    FileTab fileOpened = new FileTab(selectFile, false);
-                    tabs.add(fileOpened);
-                    createFileContentArea(fileOpened);
-                }
+                openFile();
                 break;
 
             case "SaveFile":
@@ -177,12 +159,11 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
             case "RemoveFile":
             	System.out.println("RemoveFile");
-                // TODO
+            	removeFile();
                 break;
 
             case "NewProj":
                 System.out.println("NewProject");
-                //get new folder name
                 newProject();
                 break;
 
@@ -288,11 +269,59 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     	for (int i = 0; i < tabs.size(); i++) {
             if (tabs.get(i).isProjectFile) {
             	tabs.get(i).saveFile();
-                //projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
             }
         }
     }
 
+    public void newFile() {
+    	File createFile = fileCreate();
+        if (createFile != null) {
+        	FileTab fileOpened;
+            if(projPath != null && projPath.getAbsolutePath().equals(createFile.getParent())) {
+            	fileOpened = new FileTab(createFile, true);
+            }
+            else {
+                fileOpened = new FileTab(createFile, false);
+            }
+            tabs.add(fileOpened);
+            createFileContentArea(fileOpened);
+        }
+    }
+    
+    public void openFile() {
+    	File selectFile = fileOpen();
+        if (selectFile != null) {
+            FileTab fileOpened = new FileTab(selectFile, false);
+            tabs.add(fileOpened);
+            createFileContentArea(fileOpened);
+        }
+    }
+    
+    public void removeFile() {
+    	JScrollPane selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
+    	for (int i = 0; i < tabs.size(); i++) {
+    		if(selectedComponent == tabs.get(i).tabComponent) {
+    			Object[] options = { "Delete", "Cancel"};
+                int result = JOptionPane.showOptionDialog(null,"Are you sure you want to delete " + tabs.get(i).fileName, "Unsaved Changes", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[1]);
+    			if(result == 0) {
+	                if(tabs.get(i).file.delete()) {
+	    				tabs.remove(i);
+	        			tabPane.remove(selectedComponent);
+	        			System.out.println("File deleted successfully");
+	        			break;
+	    			}
+	    			else {
+	    				System.err.println("Failed to delete selected file");
+	    			}
+    			}
+    			else {
+    				return;
+    			}
+    		}
+    	}
+    	validateActiveProject();
+    }
+    
     public void saveFile()
     {
         if(tabPane.getTabCount() == 0)
@@ -300,16 +329,13 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             System.out.println("Saving failed, No files open");
             return;
         }
-        // System.out.println(tabPane.getTitleAt(tabPane.getSelectedIndex()));
-	JScrollPane selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
+        JScrollPane selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
 
         for(int i = 0; i<tabs.size(); i++)
         {
             if(selectedComponent == tabs.get(i).tabComponent)
             {
-                // System.out.println(i);
             	tabs.get(i).saveFile();
-                //projFileSave(tabs.get(i).file, tabs.get(i).getTextPane().getText());
                 tabs.get(i).content=tabs.get(i).getTextPane().getText();
             }
         }
@@ -380,17 +406,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     			break;
     		}
     	}
-
-    	boolean isProjectFile = false;
-    	for (int j=0; j<tabs.size(); j++) {
-    		if (tabs.get(j).isProjectFile) {
-    			isProjectFile = true;
-    			break;
-    		}
-    	}
-    	if (!isProjectFile) {
-    		projPath = null;
-    	}
+    	validateActiveProject();
     	System.out.println(projPath);
     }
 
@@ -418,18 +434,18 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         return javaFiles;
     }
 
-    // Saves a project with String
-    /*public void projFileSave(File file, String content) {
-        try {
-            PrintWriter writer = new PrintWriter(file, "UTF-8");
-            writer.write(content);
-            writer.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-    }*/
+    public void validateActiveProject() {
+    	boolean isProjectFile = false;
+    	for (int j=0; j<tabs.size(); j++) {
+    		if (tabs.get(j).isProjectFile) {
+    			isProjectFile = true;
+    			break;
+    		}
+    	}
+    	if (!isProjectFile) {
+    		projPath = null;
+    	}
+    }
 
     // For file filter to save different types of files( maybe not useful, you guys can delete it)
     class MyFileFilter extends FileFilter {
