@@ -53,8 +53,10 @@ class FileTab {
 	public void saveFile() {
 		try {
             PrintWriter writer = new PrintWriter(file, "UTF-8");
-            writer.write(getTextPane().getText());
+            String currentContent = getTextPane().getText();
+            writer.write(currentContent);
             writer.close();
+            content = currentContent;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {

@@ -149,7 +149,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
             case "SaveFile":
                 System.out.println("SaveFile");
-                saveFile();
+                saveFile((JScrollPane) tabPane.getSelectedComponent());
                 break;
 
             case "CloseFile":
@@ -251,7 +251,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
                     String x = tabs.get(i).fileName + " has unsaved changes, do you want to save them?";
                     int result = JOptionPane.showOptionDialog(null,x, "Unsaved Changes", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                     if(result == 0) {
-                    	saveFile();
+                    	saveFile(tabs.get(i).tabComponent);
                     }
                     else if(result == 1) {
                     	return;
@@ -322,14 +322,14 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     	validateActiveProject();
     }
     
-    public void saveFile()
+    public void saveFile(JScrollPane selectedComponent)
     {
-        if(tabPane.getTabCount() == 0)
+        if(tabPane.getTabCount() == 0 || selectedComponent == null)
         {
             System.out.println("Saving failed, No files open");
             return;
         }
-        JScrollPane selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
+        selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
 
         for(int i = 0; i<tabs.size(); i++)
         {
@@ -395,7 +395,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
                     String x = tabs.get(i).fileName + " has unsaved changes, do you want to save them?";
                     int result = JOptionPane.showOptionDialog(null,x, "Unsaved Changes", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
                     if(result == 0) {
-                    	saveFile();
+                    	saveFile(selectedComponent);
                     }
                     else if(result == 1) {
                     	return;
