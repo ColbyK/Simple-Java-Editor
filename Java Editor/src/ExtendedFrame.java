@@ -1,4 +1,5 @@
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.*;
@@ -109,11 +110,15 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     // Creates an editor tab for the selected file through *File -> Open*
     public void createFileContentArea(FileTab fileData) {
         JTextPane panelTextPane = new JTextPane();
+        panelTextPane.setFont(new Font("default", Font.PLAIN, 13));
+        TextLineNumber tln = new TextLineNumber(panelTextPane);
         JScrollPane panelScrollPane = new JScrollPane(panelTextPane);
+        panelScrollPane.setRowHeaderView(tln);
         fileData.tabComponent = panelScrollPane;
 
         panelTextPane.setText(fileData.content);
         panelScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        panelScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
         if(fileData.isProjectFile)
         	tabPane.add(fileData.fileName + " - Project", panelScrollPane);
         else
