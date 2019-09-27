@@ -169,6 +169,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
             case "NewProj":
                 System.out.println("NewProject");
+                closeProject();
                 newProject();
                 break;
 
@@ -246,7 +247,8 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         } else {
             JOptionPane.showMessageDialog(null, "There is already a folder with the name of: " + folderName);
         }
-
+        projPath = folderNameCreate;
+        
         //Create a Main File
         String mainFile = "Main";
         String javaMainFile = mainFile + ".java";
