@@ -185,16 +185,48 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
             case "Compile":
                 System.out.println("Compile");
-                // TODO
+                compileProject();
                 break;
 
             case "Execute":
                 System.out.println("Execute");
-                // TODO
+                executeProject();
                 break;
         }
     }
 
+    public void executeProject() {
+    	if(projPath != null) {
+    		try {
+				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"cd " + projPath.getAbsolutePath() + " && java Main\"");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    }
+    
+    public void compileProject() {
+    	if(projPath != null) {
+	    	String commandBuilder = "";
+	    	boolean firstExists = false;
+	    	for(int i = 0; i < tabs.size(); i++) {
+	    		if(tabs.get(i).isProjectFile) {
+	    			if(firstExists) {
+	    				commandBuilder += " && ";
+	    			}
+	    			commandBuilder += "javac " + tabs.get(i).fileName;
+	    			firstExists = true;
+	    		}
+	    	}
+	    	System.out.println(commandBuilder);
+	    	try {
+				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"cd " + projPath.getAbsolutePath() + " && " + commandBuilder + "\"");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    }
+    
     public void newProject() {
     	//get new folder name
         String folderName = JOptionPane.showInputDialog("Enter a new folder name");
