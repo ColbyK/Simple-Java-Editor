@@ -367,7 +367,6 @@ class ExtendedJFrame extends JFrame implements ActionListener {
             System.out.println("Saving failed, No files open");
             return;
         }
-        selectedComponent = (JScrollPane) tabPane.getSelectedComponent();
 
         for(int i = 0; i<tabs.size(); i++)
         {
