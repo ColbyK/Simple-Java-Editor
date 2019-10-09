@@ -54,6 +54,10 @@ class FileTab {
 		try {
             PrintWriter writer = new PrintWriter(file, "UTF-8");
             String currentContent = getTextPane().getText();
+            if(currentContent.substring(currentContent.length() - 1).equals("\u0000")) {
+            	//System.out.println("BOM found");
+            	currentContent = currentContent.substring(0, currentContent.length() - 1);
+            }
             writer.write(currentContent);
             writer.close();
             content = currentContent;
