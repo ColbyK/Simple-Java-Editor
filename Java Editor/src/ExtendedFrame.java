@@ -210,7 +210,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 			}
     	}
     }
-    
+    //
     public void compileProject() {
     	if(projPath != null) {
 	    	String commandBuilder = "";
