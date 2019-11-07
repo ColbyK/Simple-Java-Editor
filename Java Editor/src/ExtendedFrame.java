@@ -128,7 +128,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         this.setSize(1000, 800);
         this.setVisible(true);
 
-        // Listener for code highlighting
+        // Listener for code highlighting//
         panelTextPane.addCaretListener(new CaretListener() {
             public void caretUpdate(CaretEvent arg0) {
                 EditorTextHighlight eth = new EditorTextHighlight(panelTextPane, keywordsTrack);
