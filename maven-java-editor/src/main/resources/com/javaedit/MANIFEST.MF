@@ -1,0 +1,2 @@
+Premain-Class: com.javaedit.JavaEditorAgent
+Class-Path: com/javaedit/javassist-3.12.1.GA.jar
