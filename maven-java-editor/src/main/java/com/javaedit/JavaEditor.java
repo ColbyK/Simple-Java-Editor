@@ -14,7 +14,7 @@ public class JavaEditor {
         frame.setPreferredSize(new Dimension(600, 400)); 
         frame.pack();
         frame.setVisible(true);
-    }
+    }//
 
     public static void main(String[] args) {
         new JavaEditor();

@@ -28,13 +28,13 @@ class Transformer implements ClassFileTransformer {
 		   className.startsWith("org")) {
 			return classfileBuffer;
 		}
-		System.out.println("Loaded: " + className);
+		System.out.println("*Loaded Class: " + className);
 		ClassPool pool = new ClassPool(true);
 		try {
 			CtClass currentClass = pool.get(className);
 			CtMethod[] methods = currentClass.getDeclaredMethods();
 			for(CtBehavior redefineMethod : methods) {
-				redefineMethod.insertBefore("System.out.println(\"" + className + "." + redefineMethod.getName() + " called\");");
+				redefineMethod.insertBefore("System.out.println(\"*" + className + "." + redefineMethod.getName() + " called\");");
 			}
 			return currentClass.toBytecode();
 		} catch (CannotCompileException e) {

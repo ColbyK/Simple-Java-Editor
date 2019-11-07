@@ -224,7 +224,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     		try {
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K "
 										+ "\"cd " + currentProjectPath
-										+ " && java -javaagent:" + prel2 + "\\target\\classes\\JEAgent.jar Main\"");
+										+ " && java -javaagent:" + prel2 + "\\src\\main\\resources\\com\\javaedit\\JEAgent.jar Main\"");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
