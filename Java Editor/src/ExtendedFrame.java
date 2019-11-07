@@ -204,7 +204,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
     public void executeProject() {
     	if(projPath != null) {
     		try {
-				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"cd " + projPath.getAbsolutePath() + " && java Main\"");
+				Runtime.getRuntime().exec("cmd /c start cmd.exe /K \"cd " + projPath.getAbsolutePath() + " && java -verbose:class Main\"");
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
