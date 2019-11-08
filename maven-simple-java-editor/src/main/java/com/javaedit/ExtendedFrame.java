@@ -86,6 +86,9 @@ class ExtendedJFrame extends JFrame implements ActionListener {
         JMenuItem executeProgMenuItem = new JMenuItem("Execute");
         executeProgMenuItem.setActionCommand("Execute");
         executeProgMenuItem.addActionListener(this);
+        JMenuItem executeVerbProgMenuItem = new JMenuItem("Execute Verbose");
+        executeVerbProgMenuItem.setActionCommand("VerbExecute");
+        executeVerbProgMenuItem.addActionListener(this);
 
         menuSpacer.setEnabled(false);
 
@@ -102,6 +105,7 @@ class ExtendedJFrame extends JFrame implements ActionListener {
 
         menuProg.add(compileProgMenuItem);
         menuProg.add(executeProgMenuItem);
+        menuProg.add(executeVerbProgMenuItem);
 
         menuBar.add(menuFile);
         menuBar.add(menuProj);
@@ -202,24 +206,34 @@ class ExtendedJFrame extends JFrame implements ActionListener {
                 System.out.println("Execute");
                 executeProject();
                 break;
+                
+            case "VerbExecute":
+                System.out.println("VerbExecute");
+                executeVerbProject();
+                break;
         }
     }
 
     public void executeProject() {
+    	if(projPath != null) {
+    		try {
+				Runtime.getRuntime().exec("cmd /c start cmd.exe /K "
+										+ "\"cd " + projPath.getAbsolutePath()
+										+ " && java Main\"");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+    	}
+    }
+    public void executeVerbProject() {
     	String basePath = System.getProperty("user.dir");
     	String currentProjectPath = projPath.getAbsolutePath();
-    	//String relativePath = new File(projPath.toURI().relativize(new File(basePath).toURI())).getPath();
-    	//String otherRelativePath = new File(basePath).toURI().relativize(projPath.toURI()).getPath();
     	Path pbase = Paths.get(basePath);
     	Path pcur = Paths.get(projPath.getAbsolutePath());
-    	//Path prel = pbase.relativize(pcur);
     	Path prel2 = pcur.relativize(pbase);
-    	//System.out.println(prel);
     	System.out.println(prel2);
     	System.out.println(basePath);
     	System.out.println(currentProjectPath);
-    	//System.out.println(relativePath);
-    	//System.out.println(otherRelativePath);
     	if(projPath != null) {
     		try {
 				Runtime.getRuntime().exec("cmd /c start cmd.exe /K "
